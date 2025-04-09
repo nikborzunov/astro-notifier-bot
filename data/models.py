@@ -1,5 +1,3 @@
-# Models for storing asteroid, event, and photo data
-
 class Asteroid:
     def __init__(self, name, closest_approach_date, distance):
         self.name = name

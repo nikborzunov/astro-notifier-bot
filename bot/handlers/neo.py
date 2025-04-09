@@ -1,86 +1,100 @@
-from services.nasa_api import get_near_earth_objects  # Import function to fetch NEO data from NASA API
-from bot.handlers.message_utils import send_message_with_keyboard  # Import function to send messages with keyboard
-from utils.logger import logger  # Logging utility
-from datetime import datetime, timedelta
+from services.nasa_api import get_near_earth_objects  
+from bot.handlers.message_utils import send_message_with_keyboard  
+from utils.logger import logger  
+from datetime import datetime
 
-# Function to send Near-Earth Objects (NEO) data
 async def send_neo(query):
     try:
-        # Fetch NEO data from NASA API without a date filter
-        neo_data = get_near_earth_objects()  
-        
+        neo_data = get_near_earth_objects()
+
         if neo_data:
-            # Initial message to explain NEO data
+            def get_approach_date(neo):
+                try:
+                    return datetime.strptime(neo["close_approach_data"][0]["close_approach_date"], "%Y-%m-%d")
+                except:
+                    return datetime.min
+
+            sorted_neo = sorted(neo_data, key=get_approach_date, reverse=True)
+
+            top_neo = sorted_neo[:10]
+
+            def get_diameter(neo):
+                try:
+                    return float(neo["estimated_diameter"]["meters"]["estimated_diameter_max"])
+                except (KeyError, ValueError):
+                    return 0
+
+            sorted_top_neo = sorted(top_neo, key=get_diameter, reverse=True)
+
             neo_message = (
-                "🌌 **Potentially Hazardous Near-Earth Objects (NEOs)** 🚀\n\n"
-                "NEOs are asteroids and comets that orbit the Sun and can come close to Earth. "
-                "While they don't all pose a threat, we closely monitor their movements. "
-                "Here are some of the most important NEOs currently approaching our planet. 🪐\n\n"
+                "🌌 **Today's Potentially Hazardous Near-Earth Objects (NEOs)** 🚀\n\n"
+                "These are asteroids and comets that are closely approaching Earth today. "
+                "Let's take a look at the most important NEOs passing by today! 🪐\n\n"
                 "🔭 **Details on each NEO:**\n\n"
             )
 
-            # Process each NEO and append to the message
-            for index, neo in enumerate(neo_data, start=1):  
-                # Extract NEO name, default to "Unknown" if not available
-                neo_name = neo.get("name", "Unknown")  
+            for index, neo in enumerate(sorted_top_neo, start=1):
+                neo_name = neo.get("name", "Unknown")
                 
                 try:
-                    # Try to get NEO diameter, set to "Unknown" if not available
                     neo_diameter = float(neo["estimated_diameter"]["meters"]["estimated_diameter_max"])
                 except (KeyError, ValueError):
-                    neo_diameter = "Unknown" 
+                    neo_diameter = "Unknown"
 
                 try:
-                    # Check for close approach data (date and velocity)
                     if neo.get("close_approach_data"):
                         neo_velocity = float(neo["close_approach_data"][0]["relative_velocity"]["kilometers_per_hour"])
                         neo_approach_date = neo["close_approach_data"][0]["close_approach_date"]
+                        neo_min_distance = float(neo["close_approach_data"][0]["miss_distance"]["kilometers"])
                     else:
                         neo_velocity = "Unknown"
                         neo_approach_date = "Unknown"
+                        neo_min_distance = "Unknown"
                 except (KeyError, ValueError, IndexError):
                     neo_velocity = "Unknown"
                     neo_approach_date = "Unknown"
+                    neo_min_distance = "Unknown"
+
+                try:
+                    neo_discovery_date = neo.get("discovery_date", "Unknown")
+                except KeyError:
+                    neo_discovery_date = "Unknown"
+
+                try:
+                    neo_object_type = neo.get("is_potentially_hazardous_asteroid", "Unknown")
+                except KeyError:
+                    neo_object_type = "Unknown"
                 
-                # Format velocity display
                 if isinstance(neo_velocity, float):
                     neo_velocity_display = f"⚡ **Speed**: {neo_velocity:,.2f} km/h"
                 else:
                     neo_velocity_display = f"⚡ **Speed**: {neo_velocity if neo_velocity != 'Unknown' else 'Data not available'}"
                 
-                # Format closest approach date display
                 if neo_approach_date != 'Unknown':
                     neo_approach_date_display = f"📅 **Closest Approach**: {neo_approach_date}"
                 else:
                     neo_approach_date_display = "📅 **Closest Approach**: Data not available"
                 
-                # Debugging output to log missing data
-                logger.info(f"Velocity: {neo_velocity_display}")
-                logger.info(f"Closest Approach: {neo_approach_date_display}")
+                neo_min_distance_display = f"🌍 **Min Distance**: {neo_min_distance:.3f} km" if neo_min_distance != "Unknown" else "🌍 **Min Distance**: Data not available"
                 
-                # Create formatted message for each NEO with clear structure
                 neo_message += (
-                    f"🪐 **{neo_name}**  🌌 **Size**: {neo_diameter:,.2f} m\n"  # NEO name and size in one line
-                    f"{neo_velocity_display}\n"  # NEO velocity
-                    f"{neo_approach_date_display}\n"  # NEO closest approach date
-                    "\n━━━━━━━━━━━━━━━━━━━━━\n"  # Separator between NEOs
+                    f"🪐 **{neo_name}** \n"
+                    f"🌌 **Size**: {neo_diameter if isinstance(neo_diameter, float) else 'Unknown'} m\n"
+                    f"{neo_velocity_display}\n"
+                    f"{neo_approach_date_display}\n"
+                    f"{neo_min_distance_display}\n"
+                    f"🔭 **Discovery Date**: {neo_discovery_date}\n"
+                    f"🚀 **Object Type**: {'Asteroid' if neo_object_type else 'Comet'}\n"
+                    "\n━━━━━━━━━━━━━━━━━━━━━\n"
                 )
 
-            # Final message formatting
             neo_message += "\nStay curious and safe! 🌌💫"
             
-            # Sending the detailed message with NEO information
             await send_message_with_keyboard(query, neo_message)
             logger.info(f"Sent NEO data to {query.from_user.username}")
         else:
-            # If no NEO data is fetched, inform the user
-            neo_message = (
-                "⚠️ **Oops!** We couldn't fetch the Near-Earth Objects data at the moment. "
-                "Please try again later. 🌌"
-            )
-            await send_message_with_keyboard(query, neo_message)
-
+            await send_message_with_keyboard(query, "⚠️ No recent Near-Earth Object events found today.")
+    
     except Exception as e:
-        # Handle errors gracefully and notify the user
-        logger.error(f"Error in NEO: {e}")
-        await send_message_with_keyboard(query, "⚡ Something went wrong while fetching NEO data! Please try again later.")
+        logger.error(f"Error in sending NEO data: {e}")
+        await send_message_with_keyboard(query, "⚡ Something went wrong while fetching today's NEO data! Please try again later.")

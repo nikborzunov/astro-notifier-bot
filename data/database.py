@@ -1,7 +1,6 @@
 import sqlite3
 from sqlite3 import Error
 
-# Function to create the database and tables
 def create_connection():
     try:
         connection = sqlite3.connect("astro_notifier.db")
@@ -10,7 +9,6 @@ def create_connection():
         print(f"Error creating connection: {e}")
         return None
 
-# Function to create tables
 def create_tables():
     connection = create_connection()
     if connection:
@@ -34,7 +32,6 @@ def create_tables():
         connection.commit()
         connection.close()
 
-# Function to insert APOD data into the database
 def insert_apod(title, url, date):
     connection = create_connection()
     if connection:
@@ -43,7 +40,6 @@ def insert_apod(title, url, date):
         connection.commit()
         connection.close()
 
-# Function to insert Near-Earth Object data into the database
 def insert_neo(name, diameter, hazardous):
     connection = create_connection()
     if connection:

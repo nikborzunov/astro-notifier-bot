@@ -1,6 +1,6 @@
 # bot/handlers/message_utils.py
 
-from bot.handlers.keyboard_utils import create_keyboard  # Import create_keyboard
+from bot.handlers.keyboard_utils import create_keyboard
 from utils.logger import logger
 
 async def send_message_with_keyboard(query, message):

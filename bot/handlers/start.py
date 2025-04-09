@@ -5,13 +5,11 @@ from telegram.ext import CallbackContext
 from bot.handlers.keyboard_utils import create_keyboard
 from utils.logger import logger
 
-# Function to handle /start command
 async def start(update: Update, context: CallbackContext):
     try:
         user = update.effective_user
         logger.info(f"User {user.username} started the bot.")
         
-        # Description of the bot
         bot_description = (
             "Welcome to AstroNotifierBot! 🌌\n\n"
             "This bot provides you with information about:\n"
@@ -20,7 +18,6 @@ async def start(update: Update, context: CallbackContext):
             "Choose an option below to get started!"
         )
         
-        # Send welcome message with bot description and inline keyboard (buttons below input field)
         await update.message.reply_text(bot_description, reply_markup=create_keyboard())
         logger.info(f"Sent welcome message to {user.username}")
     except Exception as e:
