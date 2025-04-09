@@ -8,7 +8,7 @@ from datetime import datetime
 
 async def send_neo(query):
     try:
-        neo_data = get_near_earth_objects()
+        neo_data = await get_near_earth_objects()
 
         if neo_data:
             def get_approach_date(neo):

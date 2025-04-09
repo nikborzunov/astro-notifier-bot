@@ -3,10 +3,12 @@
 from services.nasa_api import get_apod
 from bot.handlers.message_utils import send_message_with_keyboard
 from utils.logger import logger
+from data.database import insert_apod
 
 async def send_apod(query):
     try:
-        apod_data = get_apod()  
+        apod_data = await get_apod()
+        
         if apod_data:
             apod_title = apod_data["title"]
             apod_url = apod_data["url"]
@@ -27,6 +29,9 @@ async def send_apod(query):
                 f"🖼️ [View the full image here]({apod_url})\n\n"
                 f"Keep looking up! ✨"
             )
+            
+            insert_apod(apod_title, apod_url, apod_date)
+
         else:
             apod_message = "⚠️ Sorry, I couldn't fetch the Astronomy Picture of the Day right now."
 

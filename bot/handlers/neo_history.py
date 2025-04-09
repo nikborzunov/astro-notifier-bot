@@ -12,7 +12,7 @@ async def send_neo_history(update, context):
         today = datetime.utcnow().date()
         seven_days_ago = today - timedelta(days=7)
 
-        neo_data = get_near_earth_objects(start_date=seven_days_ago.isoformat(), end_date=today.isoformat())
+        neo_data = await get_near_earth_objects(start_date=seven_days_ago.isoformat(), end_date=today.isoformat())
 
         if neo_data:
             sorted_neo_data = sorted(
