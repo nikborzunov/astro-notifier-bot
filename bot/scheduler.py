@@ -1,3 +1,5 @@
+# bot/scheduler.py
+
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 import logging
@@ -8,9 +10,9 @@ from services.neo_alert_service import fetch_and_notify_neo
 
 logger = logging.getLogger(__name__)
 
-def scheduled_task():
+async def scheduled_task():
     try:
-        apod_data = get_apod()
+        apod_data = await get_apod()
         if apod_data:
             title = apod_data["title"]
             url = apod_data["url"]
@@ -18,11 +20,10 @@ def scheduled_task():
             insert_apod(title, url, date)
             send_notification(f"Today's APOD: {title} - {url}")
 
-        fetch_and_notify_neo()
+        await fetch_and_notify_neo()
 
     except Exception as e:
         logger.error(f"Error in scheduled task: {e}")
-
 
 def start_scheduler():
     try:

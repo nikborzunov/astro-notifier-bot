@@ -1,3 +1,5 @@
+# bot/telegram_bot.py
+
 import os
 from dotenv import load_dotenv
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler

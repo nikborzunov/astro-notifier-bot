@@ -2,6 +2,7 @@
 
 from bot.handlers.apod import send_apod
 from bot.handlers.neo import send_neo
+from bot.handlers.neo_history import send_neo_history
 from bot.handlers.keyboard_utils import create_keyboard
 from telegram import Update
 from telegram.ext import CallbackContext
@@ -18,3 +19,5 @@ async def button(update: Update, context: CallbackContext):
         await send_apod(query)
     elif query.data == 'neo':
         await send_neo(query)
+    elif query.data == 'neo_history':
+        await send_neo_history(query, context)

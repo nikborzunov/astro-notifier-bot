@@ -14,7 +14,8 @@ async def start(update: Update, context: CallbackContext):
             "Welcome to AstroNotifierBot! 🌌\n\n"
             "This bot provides you with information about:\n"
             "- Astronomy Picture of the Day 🌠\n"
-            "- Near-Earth Objects (asteroids) 🚀\n\n"
+            "- Near-Earth Objects (asteroids) 🚀\n"
+            "- NEO History (Last 7 Days) 🚀\n\n"
             "Choose an option below to get started!"
         )
         
