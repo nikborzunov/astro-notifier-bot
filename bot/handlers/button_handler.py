@@ -12,12 +12,25 @@ async def button(update: Update, context: CallbackContext):
     query = update.callback_query
     await query.answer()
 
-    loading_message = "Loading... 🚀"
-    await query.edit_message_text(loading_message)
+    loading_message = "⏳ Please wait... "
+    loading_message_sent = await query.message.reply_text(loading_message)
 
-    if query.data == 'apod':
-        await send_apod(query)
-    elif query.data == 'neo':
-        await send_neo(query)
-    elif query.data == 'neo_history':
-        await send_neo_history(query, context)
+    try:
+        if query.data == 'apod':
+            content_message = await send_apod(query)
+        elif query.data == 'neo':
+            content_message = await send_neo(query)
+        elif query.data == 'neo_history':
+            content_message = await send_neo_history(query, context)
+
+        await loading_message_sent.delete()
+
+        if not content_message:
+            logger.error("Received empty content_message.")
+            return
+
+        await query.message.reply_text(content_message, reply_markup=create_keyboard())
+    
+    except Exception as e:
+        logger.error(f"Error during button handling: {e}")
+        await query.message.reply_text("⚠️ Something went wrong. Please try again later. 💥")
