@@ -1,14 +1,11 @@
-# Используем официальный Python образ
 FROM python:3.9-slim
 
-# Устанавливаем рабочую директорию
+RUN apt-get update && apt-get install -y make
+
 WORKDIR /app
 
-# Копируем файлы проекта в контейнер
 COPY . /app/
 
-# Устанавливаем зависимости
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Указываем команду для запуска бота
-CMD ["python", "main.py"]
+CMD ["make", "run"]
