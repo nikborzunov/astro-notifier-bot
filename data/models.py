@@ -1,3 +1,5 @@
+# data/models.py
+
 class Asteroid:
     def __init__(self, name, closest_approach_date, distance):
         self.name = name

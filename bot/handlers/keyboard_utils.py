@@ -3,7 +3,9 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 def create_keyboard():
-    return InlineKeyboardMarkup([
-        [InlineKeyboardButton("Astronomy Picture of the Day", callback_data='apod')],
-        [InlineKeyboardButton("Near-Earth Objects", callback_data='neo')]
-    ])
+    keyboard = [
+        [InlineKeyboardButton("Astronomy Picture of the Day", callback_data="apod")],
+        [InlineKeyboardButton("Latest 10 Near-Earth Objects", callback_data="neo")],
+        [InlineKeyboardButton("Top 3 Potentially Hazardous NEOs in Last 7 Days", callback_data="neo_history")]
+    ]
+    return InlineKeyboardMarkup(keyboard)

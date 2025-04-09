@@ -1,3 +1,5 @@
+# bot/handlers/apod.py
+
 from services.nasa_api import get_apod
 from bot.handlers.message_utils import send_message_with_keyboard
 from utils.logger import logger

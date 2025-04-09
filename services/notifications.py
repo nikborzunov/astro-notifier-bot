@@ -1,3 +1,5 @@
+# services/notifications.py
+
 from utils.logger import logger
 
 def send_notification(message: str):
