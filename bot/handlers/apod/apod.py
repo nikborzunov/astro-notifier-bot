@@ -18,15 +18,15 @@ async def send_apod(query):
             apod_object_type = apod_data.get("object_type", "Unknown")
             
             apod_message = (
-                f"🌌 **Astronomy Picture of the Day** 🌠\n\n"
-                f"**Title**: {apod_title}\n"
-                f"**Date**: {apod_date}\n\n"
-                f"**Description**:\n{apod_description}\n\n"
-                f"**Author**: {apod_author}\n"
-                f"**Object Type**: {apod_object_type}\n\n"
-                f"🌟 **Explore More!** 🌟\n"
+                f"🌌 <b>Astronomy Picture of the Day</b> 🌠\n\n"
+                f"<b>Title</b>: {apod_title}\n"
+                f"<b>Date</b>: {apod_date}\n\n"
+                f"<b>Description</b>:\n{apod_description}\n\n"
+                f"<b>Author</b>: {apod_author}\n"
+                f"<b>Object Type</b>: {apod_object_type}\n\n"
+                f"🌟 <b>Explore More!</b> 🌟\n"
                 f"Here is the Astronomy Picture of the Day! It showcases a fascinating celestial object or phenomenon.\n\n"
-                f"🖼️ [View the full image here]({apod_url})\n\n"
+                f"🖼️ <a href='{apod_url}'>View the full image here</a>\n\n"
                 f"Keep looking up! ✨"
             )
             
