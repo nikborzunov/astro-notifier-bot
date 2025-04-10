@@ -1,6 +1,7 @@
 import sqlite3
 from sqlite3 import Error
 from contextlib import contextmanager
+from utils.logger import logger
 
 @contextmanager
 def create_connection():
@@ -9,7 +10,7 @@ def create_connection():
         connection = sqlite3.connect("astro_notifier.db")
         yield connection
     except Error as e:
-        print(f"Error creating connection: {e}")
+        logger.error(f"Error creating connection: {e}")
     finally:
         if connection:
             connection.commit()
