@@ -31,9 +31,9 @@ def get_value_from_neo(neo, *keys):
 
 def build_neo_message(top_3_neo):
     message = (
-        "🌌 **Top 3 Potentially Hazardous NEOs in the Last 7 Days** 🚀\n\n"
+        "🌌 <b>Top 3 Potentially Hazardous NEOs in the Last 7 Days</b> 🚀\n\n"
         "Here are the details of the 3 largest potentially hazardous Near-Earth Objects (NEOs) observed in the last 7 days.\n\n"
-        "🔭 **Details on each NEO:**\n\n"
+        "<b>🔭 Details on each NEO:</b>\n\n"
     )
 
     for neo in top_3_neo:
@@ -44,12 +44,12 @@ def build_neo_message(top_3_neo):
         neo_min_distance = get_value_from_neo(neo, "close_approach_data", 0, "miss_distance", "kilometers")
 
         message += (
-            f"🪐 **{neo_name}** \n"
-            f"🌌 **Size**: {neo_diameter} m\n"
-            f"⚡ **Speed**: {neo_velocity}\n"
-            f"📅 **Closest Approach**: {neo_approach_date}\n"
-            f"🌍 **Min Distance**: {neo_min_distance}\n"
-            "\n━━━━━━━━━━━━━━━━━━━━━\n"
+            f"<b>🪐 {neo_name}</b> \n"
+            f"🌌 <b>Size</b>: {neo_diameter} m\n"
+            f"⚡ <b>Speed</b>: {neo_velocity}\n"
+            f"📅 <b>Closest Approach</b>: {neo_approach_date}\n"
+            f"🌍 <b>Min Distance</b>: {neo_min_distance}\n"
+            "\n<b>━━━━━━━━━━━━━━━━━━━━━</b>\n"
         )
 
     message += "\nStay curious and safe! 🌌💫"

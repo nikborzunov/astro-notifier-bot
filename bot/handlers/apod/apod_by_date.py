@@ -15,7 +15,7 @@ async def ask_for_date(update, context):
 
         await send_message_with_keyboard(
             query.message,
-            "📅 *Please enter a date* for APOD (in the format `YYYY-MM-DD`).\nExample: `1996-09-07` or `2020-01-01`."
+            "📅 <b>Please enter a date</b> for APOD (in the format <code>YYYY-MM-DD</code>). Example: <code>1996-09-07</code> or <code>2020-01-01</code>."
         )
         context.user_data['waiting_for_date'] = True
         logger.info(f"Waiting for date input from user {query.from_user.username}")
@@ -36,12 +36,12 @@ async def handle_user_date(update, context):
         query = update.callback_query if update.callback_query else None
         message = update.message if update.message else None
 
-        loading_message = f"✅ *Date received:* {selected_date}. Searching for the image... ⏳"
-        loading_message_sent = await (query.message if query else message).reply_text(loading_message)
+        loading_message = f"✅ <b>Date received:</b> {selected_date}. Searching for the image... ⏳"
+        loading_message_sent = await (query.message if query else message).reply_text(loading_message, parse_mode='HTML')
 
         apod_data = await get_apod_by_date(selected_date.strftime('%Y-%m-%d'))
         if 'error' in apod_data:
-            await send_message_with_keyboard(message or query.message, f"⚠️ *Error:* {apod_data['error']}")
+            await send_message_with_keyboard(message or query.message, f"⚠️ <b>Error:</b> {apod_data['error']}", parse_mode='HTML')
             await loading_message_sent.delete()
             return
 
@@ -49,33 +49,35 @@ async def handle_user_date(update, context):
         if not image:
             await send_message_with_keyboard(
                 message or query.message,
-                f"⚠️ *No images found* for *{selected_date}*. Try a different date."
+                f"⚠️ <b>No images found</b> for <b>{selected_date}</b>. Try a different date.",
+                parse_mode='HTML'
             )
             await loading_message_sent.delete()
             return
 
         actual_date = datetime.strptime(image.get("date_created", str(selected_date))[:10], "%Y-%m-%d").date()
         prefix = (
-            f"🌟 *Exact match found* for {actual_date}!"
+            f"🌟 <b>Exact match found</b> for {actual_date}!"
             if actual_date == selected_date
-            else f"🔎 *No image for {selected_date}. Showing the closest one from* *{actual_date}*."
+            else f"🔎 <b>No image for {selected_date}. Showing the closest one from</b> <b>{actual_date}</b>."
         )
 
         msg = (
-            f"🔎 *No image found for* {selected_date}.\n"
-            f"👉 *Showing the closest image from* *{actual_date}*:\n\n"
-            f"✨ *{image.get('title', 'No Title')}* ✨\n\n"
-            f"📖 *Description*: {image.get('description', 'No Description available')}\n\n"
-            f"🔗 *[View Image]({image.get('image_url', '')})*\n\n"
-            f"🆔 *NASA ID*: `{image.get('nasa_id', '')}`\n\n"
-            f"🌐 Explore more images and details on [NASA's platform](https://images.nasa.gov/)"
+            f"🔎 <b>No image found for</b> {selected_date}.\n"
+            f"👉 <b>Showing the closest image from</b> <b>{actual_date}</b>:\n\n"
+            f"✨ <b>{image.get('title', 'No Title')}</b> ✨\n\n"
+            f"📖 <b>Description</b>: {image.get('description', 'No Description available')}\n\n"
+            f"🔗 <b><a href='{image.get('image_url', '')}'>View Image</a></b>\n\n"
+            f"🆔 <b>NASA ID</b>: <code>{image.get('nasa_id', '')}</code>\n\n"
+            f"🌐 Explore more images and details on <a href='https://images.nasa.gov/'>NASA's platform</a>"
         )
         
-        await send_message_with_keyboard(message or query.message, msg)
+        await send_message_with_keyboard(message or query.message, msg, parse_mode='HTML')
+
         await loading_message_sent.delete()
 
     except ValueError:
-        await send_message_with_keyboard(message or query.message, "⚠️ *Invalid date format*. Please use `YYYY-MM-DD`. For example, `2020-12-15`.")
+        await send_message_with_keyboard(message or query.message, "⚠️ <b>Invalid date format</b>. Please use <code>YYYY-MM-DD</code>. For example, <code>2020-12-15</code>.", parse_mode='HTML')
     except Exception as e:
         logger.error(f"handle_user_date error: {e}")
-        await send_message_with_keyboard(message or query.message, "⚠️ *Error processing your request*. Please try again later.")
+        await send_message_with_keyboard(message or query.message, "⚠️ <b>Error processing your request</b>. Please try again later.", parse_mode='HTML')
