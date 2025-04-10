@@ -1,9 +1,10 @@
 # bot/handlers/button_handler.py
 
-from bot.handlers.apod import send_apod
-from bot.handlers.neo import send_neo
-from bot.handlers.neo_history import send_neo_history
-from bot.handlers.keyboard_utils import create_keyboard
+from bot.handlers.apod.apod import send_apod
+from bot.handlers.neo.neo import send_neo
+from bot.handlers.neo.neo_history import send_neo_history
+from bot.handlers.apod.apod_by_date import ask_for_date
+from bot.handlers.utils.keyboard_utils import create_keyboard
 from telegram import Update
 from telegram.ext import CallbackContext
 from utils.logger import logger
@@ -22,6 +23,8 @@ async def button(update: Update, context: CallbackContext):
             content_message = await send_neo(query)
         elif query.data == 'neo_history':
             content_message = await send_neo_history(query, context)
+        elif query.data == 'apod_by_date':
+            content_message = await ask_for_date(update, context)
 
         await loading_message_sent.delete()
 

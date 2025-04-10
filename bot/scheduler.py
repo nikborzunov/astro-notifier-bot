@@ -36,6 +36,5 @@ def start_scheduler():
             replace_existing=True
         )
         scheduler.start()
-        logger.info("Scheduler started successfully.")
     except Exception as e:
         logger.error(f"Error starting scheduler: {e}")

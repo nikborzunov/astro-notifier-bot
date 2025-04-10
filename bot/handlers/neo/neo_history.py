@@ -2,7 +2,7 @@
 
 from datetime import datetime, timedelta
 from services.nasa_api import get_near_earth_objects
-from bot.handlers.message_utils import send_message_with_keyboard
+from bot.handlers.utils.message_utils import send_message_with_keyboard
 from data.database import insert_neo
 from utils.logger import logger
 from utils.neo_utils import build_neo_message
@@ -24,7 +24,6 @@ async def send_neo_history(update, context):
 
             neo_message = build_neo_message(top_3_neo)
             await send_message_with_keyboard(update.message, neo_message)
-            logger.info(f"Sent NEO history data to {update.message.from_user.username}")
         else:
             await send_message_with_keyboard(update.message, "⚠️ No Near-Earth Object events found for the last 7 days.")
 

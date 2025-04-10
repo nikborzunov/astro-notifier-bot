@@ -1,12 +1,11 @@
 from telegram import Update
 from telegram.ext import CallbackContext
-from bot.handlers.keyboard_utils import create_keyboard
+from bot.handlers.utils.keyboard_utils import create_keyboard
 from utils.logger import logger
 
 async def start(update: Update, context: CallbackContext):
     try:
         user = update.effective_user
-        logger.info(f"User {user.username} ({user.id}) started the bot.")
 
         bot_description = (
             "*🌌 Welcome to AstroNotifierBot!* 🚀\n\n"
@@ -20,7 +19,6 @@ async def start(update: Update, context: CallbackContext):
         
 
         await update.message.reply_text(bot_description, reply_markup=create_keyboard(), parse_mode="Markdown")
-        logger.info(f"Sent welcome message to {user.username} ({user.id})")
 
     except Exception as e:
         logger.error(f"Error in /start command for user {user.username} ({user.id}): {e}")
