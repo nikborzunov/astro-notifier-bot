@@ -1,10 +1,9 @@
-# bot/handlers/scheduler_commands.py
+# app/telegram_bot/handlers/commands/scheduler.py
 
 from telegram import Update
 from telegram.ext import ContextTypes
-from bot.scheduler import start_scheduler, stop_scheduler, is_scheduler_running
-from utils.logger import logger
-from bot.handlers.utils.keyboard_utils import back_keyboard
+from app.core.scheduler import start_scheduler, stop_scheduler, is_scheduler_running
+from app.telegram_bot.ui.keyboard import back_keyboard
 
 async def scheduler_start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if is_scheduler_running():

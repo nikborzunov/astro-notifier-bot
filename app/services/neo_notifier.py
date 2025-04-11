@@ -1,9 +1,9 @@
-# services/neo_alert_service.py
+# app/services/neo_notifier.py
 
 import logging
-from services.notifications import send_notification
-from services.nasa_api import get_near_earth_objects
-from data.database import insert_neo, insert_neo_history
+from app.services.notifications import send_notification
+from app.services.nasa_data import get_near_earth_objects
+from app.db.database import insert_neo, insert_neo_history
 
 logger = logging.getLogger(__name__)
 

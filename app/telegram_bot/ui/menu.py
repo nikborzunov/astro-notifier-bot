@@ -1,8 +1,8 @@
-# bot/handlers/common/menu.py
+# app/telegram_bot/ui/menu.py
 
 from telegram import Update
 from telegram.ext import ContextTypes
-from bot.handlers.utils.keyboard_utils import create_keyboard
+from app.telegram_bot.ui.keyboard import create_keyboard
 
 async def send_main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.callback_query.message.edit_text(

@@ -1,9 +1,8 @@
-# services/nasa_images_api.py
+# app/services/nasa_images.py
 
 import aiohttp
 from datetime import datetime
 import asyncio
-from utils.logger import logger
 
 NASA_IMAGES_API_BASE_URL = "https://images-api.nasa.gov"
 

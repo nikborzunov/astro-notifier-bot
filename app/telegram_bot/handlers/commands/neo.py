@@ -1,9 +1,9 @@
-# bot/handlers/neo.py
+# app/telegram_bot/handlers/commands/neo.py
 
-from services.nasa_api import get_near_earth_objects
-from bot.handlers.utils.message_utils import send_message_with_keyboard
-from utils.logger import logger
-from utils.neo_utils import build_neo_message
+from app.services.nasa_data import get_near_earth_objects
+from app.telegram_bot.ui.message import send_message_with_keyboard
+from app.utils.logger import logger
+from app.utils.neo_utils import build_neo_message
 from datetime import datetime
 
 async def send_neo(query):
