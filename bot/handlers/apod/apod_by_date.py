@@ -18,7 +18,6 @@ async def ask_for_date(update, context):
             "📅 <b>Please enter a date</b> for APOD (in the format <code>YYYY-MM-DD</code>). Example: <code>1996-09-07</code> or <code>2020-01-01</code>."
         )
         context.user_data['waiting_for_date'] = True
-        logger.info(f"Waiting for date input from user {query.from_user.username}")
     except Exception as e:
         logger.error(f"ask_for_date error: {e}")
         if update.callback_query and update.callback_query.message:

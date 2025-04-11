@@ -14,3 +14,4 @@ autopep8==1.5.7
 mypy==0.931
 typer==0.4.0
 apscheduler
+colorlog
