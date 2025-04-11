@@ -1,11 +1,11 @@
-# services/nasa_api.py
+# app/services/nasa_data.py
 
 import os
 import aiohttp
 import asyncio
 from dotenv import load_dotenv
-from utils.logger import logger
-from .nasa_images_api import get_nasa_images_by_date
+from app.utils.logger import logger
+from .nasa_images import get_nasa_images_by_date
 
 load_dotenv()
 NASA_API_KEY = os.getenv("NASA_API_KEY")

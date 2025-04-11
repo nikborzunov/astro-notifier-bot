@@ -1,12 +1,12 @@
-# bot/scheduler.py
+# app/core/scheduler.py
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 import logging
-from services.nasa_api import get_apod
-from data.database import insert_apod
-from services.notifications import send_notification
-from services.neo_alert_service import fetch_and_notify_neo
+from app.services.nasa_data import get_apod
+from app.db.database import insert_apod
+from app.services.notifications import send_notification
+from app.services.neo_notifier import fetch_and_notify_neo
 
 logger = logging.getLogger(__name__)
 

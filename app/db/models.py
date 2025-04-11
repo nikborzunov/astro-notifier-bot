@@ -1,4 +1,4 @@
-# data/models.py
+# app/db/models.py
 
 class Asteroid:
     def __init__(self, name, closest_approach_date, distance):

@@ -1,6 +1,6 @@
-# services/notifications.py
+# app/services/notifications.py
 
-from utils.logger import logger
+from app.utils.logger import logger
 
 def send_notification(message: str):
     try:

@@ -1,7 +1,9 @@
+# app/db/database.py
+
 import sqlite3
 from sqlite3 import Error
 from contextlib import contextmanager
-from utils.logger import logger
+from app.utils.logger import logger
 
 @contextmanager
 def create_connection():

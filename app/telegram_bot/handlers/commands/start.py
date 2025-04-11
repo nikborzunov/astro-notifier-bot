@@ -1,7 +1,9 @@
+# app/telegram_bot/handlers/commands/start.py
+
 from telegram import Update
 from telegram.ext import CallbackContext
-from bot.handlers.utils.keyboard_utils import create_keyboard
-from utils.logger import logger
+from app.telegram_bot.ui.keyboard import create_keyboard
+from app.utils.logger import logger
 
 async def start(update: Update, context: CallbackContext):
     try:

@@ -1,11 +1,11 @@
-# bot/handlers/neo_history.py
+# app/telegram_bot/handlers/commands/neo_history.py
 
 from datetime import datetime, timedelta
-from services.nasa_api import get_near_earth_objects
-from bot.handlers.utils.message_utils import send_message_with_keyboard
-from data.database import insert_neo
-from utils.logger import logger
-from utils.neo_utils import build_neo_message
+from app.services.nasa_data import get_near_earth_objects
+from app.telegram_bot.ui.message import send_message_with_keyboard
+from app.db.database import insert_neo
+from app.utils.logger import logger
+from app.utils.neo_utils import build_neo_message
 
 async def send_neo_history(update, context):
     try:

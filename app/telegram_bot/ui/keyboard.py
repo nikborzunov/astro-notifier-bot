@@ -1,4 +1,4 @@
-# bot/handlers/keyboard_utils.py
+# app/telegram_bot/ui/keyboard.py
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
@@ -14,7 +14,7 @@ def create_keyboard():
     return InlineKeyboardMarkup(keyboard)
 
 def back_to_menu_button():
-    return InlineKeyboardButton("⬅️ Back to Menu", callback_data="start")
+    return InlineKeyboardButton("⬅️ Back to Menu", callback_data="menu")
 
 def back_keyboard():
     return InlineKeyboardMarkup([[back_to_menu_button()]])

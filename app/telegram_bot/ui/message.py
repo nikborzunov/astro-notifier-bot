@@ -1,7 +1,7 @@
-# bot/handlers/message_utils.py
+# app/telegram_bot/ui/message.py
 
-from bot.handlers.utils.keyboard_utils import create_keyboard
-from utils.logger import logger
+from app.telegram_bot.ui.keyboard import create_keyboard
+from app.utils.logger import logger
 
 async def send_message_with_keyboard(query, message, parse_mode='HTML'):
     try:
