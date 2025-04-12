@@ -45,7 +45,7 @@ async def button(update: Update, context: CallbackContext):
         elif query.data == "menu":
             content_message = (
                 "👋 <b>Welcome back to the main menu!</b>\n\n"
-                "Select one of the options below to explore the universe 🌌"
+                "Select one of the options below to explore the universe ✨"
             )
         else:
             logger.warning(f"⚠️ Unrecognized button callback: {query.data}")

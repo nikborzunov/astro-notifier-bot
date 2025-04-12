@@ -16,22 +16,21 @@ async def scheduler_start_command(update: Update, context: ContextTypes.DEFAULT_
     chat_id = str(update.effective_chat.id)
 
     if is_scheduler_running(chat_id):
-        msg = "⚠️ You already subscribed."
-        logger.warning(f"chat_id {chat_id} tried to start scheduler but it's already running.")
+        msg = "🌙 You are already subscribed to updates."
     else:
         await start_scheduler(context.application, chat_id, user_timezone)
-        msg = "✅ Scheduler started."
+        msg = "🚀 Subscribed! Cosmic updates are now on the way!"
 
     await update.callback_query.message.edit_text(msg, reply_markup=back_keyboard())
+
 
 async def scheduler_stop_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = str(update.effective_chat.id)
 
     if not is_scheduler_running(chat_id):
-        msg = "⚠️ You already unsubscribed."
-        logger.warning(f"chat_id {chat_id} tried to stop scheduler but it wasn't running.")
+        msg = "❌ You are not subscribed to updates."
     else:
         await stop_scheduler(chat_id)
-        msg = "🛑 Scheduler stopped."
+        msg = "🛸 Unsubscribed from cosmic updates."
 
     await update.callback_query.message.edit_text(msg, reply_markup=back_keyboard())
