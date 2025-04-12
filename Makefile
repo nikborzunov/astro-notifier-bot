@@ -3,5 +3,5 @@ run:
 
 isort:
 	isort .
-	
+
 run_with_isort: isort run
