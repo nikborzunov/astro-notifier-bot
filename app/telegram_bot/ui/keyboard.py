@@ -2,6 +2,7 @@
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
+
 def create_keyboard(is_subscription_active: bool = False):
     keyboard = [
         [InlineKeyboardButton("🌌 Astronomy Pic of the Day", callback_data="apod")],

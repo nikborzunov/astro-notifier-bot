@@ -5,6 +5,7 @@ from telegram import Update
 from app.telegram_bot.ui.keyboard import create_keyboard
 from app.utils.logger import logger
 
+
 async def start(update: Update, is_subscription_active: bool = False):
     try:
         user = update.effective_user

@@ -1,10 +1,12 @@
 # app/db/database.py
 
-import sqlite3
-from sqlite3 import Error
 from contextlib import contextmanager
 from typing import List
+import sqlite3
+from sqlite3 import Error
+
 from app.utils.logger import logger
+
 
 DB_PATH = "astro_notifier.db"
 

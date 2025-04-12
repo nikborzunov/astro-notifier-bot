@@ -1,11 +1,13 @@
 # app/telegram_bot/handlers/commands/neo.py
 
+from datetime import datetime
+
+from app.core.scheduler import is_scheduler_running
 from app.services.nasa_data import get_near_earth_objects
 from app.telegram_bot.ui.message import send_message_with_keyboard
 from app.utils.logger import logger
 from app.utils.neo_utils import build_neo_message
-from datetime import datetime
-from app.core.scheduler import is_scheduler_running
+
 
 async def send_neo(update, query):
     try:

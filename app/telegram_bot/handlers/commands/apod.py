@@ -1,12 +1,14 @@
 # app/telegram_bot/handlers/commands/apod.py
 
-from telegram import Update
 from datetime import datetime
+from telegram import Update
+
+from app.core.scheduler import is_scheduler_running
+from app.db.database import insert_apod
 from app.services.nasa_data import get_apod, get_apod_by_date
 from app.telegram_bot.ui.message import send_message_with_keyboard
 from app.utils.logger import logger
-from app.db.database import insert_apod
-from app.core.scheduler import is_scheduler_running
+
 
 async def send_apod(update):
     chat_id = update.effective_user.id

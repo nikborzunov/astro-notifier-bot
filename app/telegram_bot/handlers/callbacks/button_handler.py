@@ -2,13 +2,21 @@
 
 from telegram import Update
 from telegram.ext import CallbackContext
-from app.telegram_bot.handlers.commands.apod import send_apod, ask_for_apod_date
+
+from app.core.scheduler import is_scheduler_running
+from app.telegram_bot.handlers.commands.apod import (
+    ask_for_apod_date,
+    send_apod,
+)
 from app.telegram_bot.handlers.commands.neo import send_neo
 from app.telegram_bot.handlers.commands.neo_history import send_neo_history
-from app.telegram_bot.handlers.commands.scheduler import scheduler_start_command, scheduler_stop_command
+from app.telegram_bot.handlers.commands.scheduler import (
+    scheduler_start_command,
+    scheduler_stop_command,
+)
 from app.telegram_bot.ui.message import send_message_with_keyboard
-from app.core.scheduler import is_scheduler_running
 from app.utils.logger import logger
+
 
 async def button(update: Update, context: CallbackContext):
     query = update.callback_query

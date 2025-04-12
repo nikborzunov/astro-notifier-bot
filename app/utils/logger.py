@@ -3,6 +3,7 @@
 import logging
 import colorlog
 
+
 logger = logging.getLogger("astro_notifier")
 logger.setLevel(logging.DEBUG)
 

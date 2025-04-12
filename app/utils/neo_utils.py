@@ -2,6 +2,7 @@
 
 from datetime import datetime
 
+
 def get_approach_date(neo):
     try:
         return datetime.strptime(neo["close_approach_data"][0]["close_approach_date"], "%Y-%m-%d")

@@ -1,11 +1,13 @@
 # app/telegram_bot/handlers/commands/neo_history.py
 
 from datetime import datetime, timedelta
+
+from app.core.scheduler import is_scheduler_running
 from app.services.nasa_data import get_near_earth_objects
 from app.telegram_bot.ui.message import send_message_with_keyboard
 from app.utils.logger import logger
 from app.utils.neo_utils import build_neo_message
-from app.core.scheduler import is_scheduler_running
+
 
 async def send_neo_history(update, query, context):
     try:
@@ -32,3 +34,4 @@ async def send_neo_history(update, query, context):
     except Exception as e:
         logger.error(f"Error in sending NEO history data: {e}")
         await send_message_with_keyboard(query.message, "⚡ Something went wrong while fetching the NEO history! Please try again later.", is_subscription_active=is_subscription_active)
+

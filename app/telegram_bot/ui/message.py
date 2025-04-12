@@ -3,6 +3,7 @@
 from app.telegram_bot.ui.keyboard import create_keyboard
 from app.utils.logger import logger
 
+
 async def send_message_with_keyboard(query, message, parse_mode='HTML', is_subscription_active: bool = False):
     try:
         if hasattr(query, 'edit_message_text'):

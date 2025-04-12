@@ -2,9 +2,15 @@
 
 from telegram import Update
 from telegram.ext import ContextTypes
+
+from app.core.scheduler import (
+    is_scheduler_running,
+    start_scheduler,
+    stop_scheduler,
+)
 from app.telegram_bot.ui.keyboard import back_keyboard
 from app.utils.logger import logger
-from app.core.scheduler import start_scheduler, stop_scheduler, is_scheduler_running
+
 
 async def scheduler_start_command(update: Update, context: ContextTypes.DEFAULT_TYPE, user_timezone: str):
     chat_id = str(update.effective_chat.id)

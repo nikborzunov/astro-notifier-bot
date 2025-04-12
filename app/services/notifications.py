@@ -1,7 +1,8 @@
 # app/services/notifications.py
 
-from app.utils.logger import logger
 from app.telegram_bot.ui.keyboard import back_keyboard, create_keyboard
+from app.utils.logger import logger
+
 
 async def send_notification(
     message: str, 
