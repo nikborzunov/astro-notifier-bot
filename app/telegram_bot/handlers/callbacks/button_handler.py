@@ -5,8 +5,9 @@ from telegram.ext import CallbackContext
 from app.telegram_bot.handlers.commands.apod import send_apod, ask_for_apod_date
 from app.telegram_bot.handlers.commands.neo import send_neo
 from app.telegram_bot.handlers.commands.neo_history import send_neo_history
-from app.telegram_bot.ui.keyboard import create_keyboard
 from app.telegram_bot.handlers.commands.scheduler import scheduler_start_command, scheduler_stop_command
+from app.telegram_bot.ui.message import send_message_with_keyboard
+from app.core.scheduler import is_scheduler_running
 from app.utils.logger import logger
 
 async def button(update: Update, context: CallbackContext):
@@ -21,9 +22,9 @@ async def button(update: Update, context: CallbackContext):
         if query.data == "apod":
             content_message = await send_apod(update)
         elif query.data == "neo":
-            content_message = await send_neo(query)
+            content_message = await send_neo(update, query)
         elif query.data == "neo_history":
-            content_message = await send_neo_history(query, context)
+            content_message = await send_neo_history(update, query, context)
         elif query.data == "apod_by_date":
             await loading_message.delete()
             await ask_for_apod_date(update, context)
@@ -43,10 +44,14 @@ async def button(update: Update, context: CallbackContext):
 
         await loading_message.delete()
 
+        chat_id = update.effective_user.id
+        is_subscription_active = is_scheduler_running(chat_id)
         if content_message:
-            await query.message.reply_text(content_message, reply_markup=create_keyboard(), parse_mode="HTML")
+            await send_message_with_keyboard(query.message, content_message, parse_mode="HTML", is_subscription_active=is_subscription_active)
 
     except Exception as e:
         logger.error(f"💥 Error during button handling: {e}")
         await loading_message.delete()
-        await query.message.reply_text("⚠️ Something went wrong. Please try again later.", reply_markup=create_keyboard())
+        chat_id = update.effective_user.id
+        is_subscription_active = is_scheduler_running(chat_id)
+        await send_message_with_keyboard(query.message, "⚠️ Something went wrong. Please try again later.", is_subscription_active=is_subscription_active)
