@@ -30,7 +30,8 @@ async def button(update: Update, context: CallbackContext):
             await ask_for_apod_date(update, context)
             return
         elif query.data == "start_scheduler":
-            content_message = await scheduler_start_command(update, context)
+            user_timezone = "Europe/Moscow"
+            content_message = await scheduler_start_command(update, context, user_timezone)
         elif query.data == "stop_scheduler":
             content_message = await scheduler_stop_command(update, context)
         elif query.data == "menu":

@@ -1,10 +1,14 @@
-# app/core/scheduler.py
+# app/db/database.py
 
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from apscheduler.triggers.interval import IntervalTrigger
-from app.services.nasa_data import get_apod
 from app.db.database import insert_apod, save_user_chat_id, unsubscribe_user, is_user_subscribed
 from app.services.notifications import send_notification
+import pytz
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.cron import CronTrigger
+from app.services.nasa_data import get_apod
+from app.utils.logger import logger
+import datetime
+
 
 scheduler = AsyncIOScheduler()
 
@@ -12,7 +16,8 @@ _app = None
 user_jobs = {}
 
 APOD_JOB_NAME = "Fetch APOD and send notification daily"
-DEFAULT_INTERVAL_SECONDS = 86400
+DEFAULT_TIME = "08:00"
+DEFAULT_TIMEZONE = "UTC"
 
 def is_scheduler_running(chat_id: str) -> bool:
     return bool(is_user_subscribed(chat_id))
@@ -57,7 +62,24 @@ async def scheduled_task(chat_id: str):
     except Exception as e:
         pass
 
-async def start_scheduler(application, chat_id: str):
+async def scheduled_task(chat_id: str):
+    try:        
+        apod_data = await get_apod()
+
+        if not apod_data:
+            logger.warning(f"No APOD data found for {chat_id}.")
+            return
+
+        message = await create_apod_message(apod_data)
+
+        if is_user_subscribed(chat_id):
+            await send_notification(message, chat_id, _app, False, is_subscription_active=is_scheduler_running(chat_id))
+        else:
+            logger.warning(f"User {chat_id} is not subscribed. No notification sent.")
+    except Exception as e:
+        logger.error(f"Error during scheduled task for {chat_id}: {e}")
+
+async def start_scheduler(application, chat_id: str, user_timezone: str = "Europe/Moscow"):
     if is_scheduler_running(chat_id):
         return
 
@@ -65,9 +87,24 @@ async def start_scheduler(application, chat_id: str):
     
     save_user_chat_id(chat_id)
 
+    user_tz = pytz.timezone(user_timezone) if user_timezone != DEFAULT_TIMEZONE else pytz.utc
+
+    now = datetime.datetime.now(user_tz)
+    trigger_time = now.replace(hour=8, minute=0, second=0, microsecond=0)
+
+    if trigger_time < now:
+        trigger_time += datetime.timedelta(days=1)
+
+    cron_trigger = CronTrigger(
+        hour=trigger_time.hour,
+        minute=trigger_time.minute,
+        second=0,
+        timezone=user_tz
+    )
+
     job = scheduler.add_job(
         scheduled_task,
-        trigger=IntervalTrigger(seconds=DEFAULT_INTERVAL_SECONDS),
+        trigger=cron_trigger,
         id=f'apod_task_{chat_id}',
         args=[chat_id],
         name=f'{APOD_JOB_NAME} for chat_id {chat_id}',
