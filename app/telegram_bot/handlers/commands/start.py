@@ -1,11 +1,12 @@
 # app/telegram_bot/handlers/commands/start.py
 
 from telegram import Update
-from telegram.ext import CallbackContext
+
 from app.telegram_bot.ui.keyboard import create_keyboard
 from app.utils.logger import logger
 
-async def start(update: Update, context: CallbackContext):
+
+async def start(update: Update, is_subscription_active: bool = False):
     try:
         user = update.effective_user
 
@@ -18,9 +19,8 @@ async def start(update: Update, context: CallbackContext):
             "3️⃣ *NEO History (Last 7 Days)* – Discover the recent history of near-Earth objects and space events 🌍\n\n"
             "👉 Choose an option below to start your space adventure! ✨"
         )
-        
 
-        await update.message.reply_text(bot_description, reply_markup=create_keyboard(), parse_mode="Markdown")
+        await update.message.reply_text(bot_description, reply_markup=create_keyboard(is_subscription_active), parse_mode="Markdown")
 
     except Exception as e:
         logger.error(f"Error in /start command for user {user.username} ({user.id}): {e}")

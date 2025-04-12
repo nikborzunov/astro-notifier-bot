@@ -1,13 +1,18 @@
 # app/telegram_bot/handlers/commands/apod.py
 
-from telegram import Update
 from datetime import datetime
+from telegram import Update
+
+from app.core.scheduler import is_scheduler_running
+from app.db.database import insert_apod
 from app.services.nasa_data import get_apod, get_apod_by_date
 from app.telegram_bot.ui.message import send_message_with_keyboard
 from app.utils.logger import logger
-from app.db.database import insert_apod
+
 
 async def send_apod(update):
+    chat_id = update.effective_user.id
+    is_subscription_active = is_scheduler_running(chat_id)
     try:
         apod_data = await get_apod()
 
@@ -36,12 +41,14 @@ async def send_apod(update):
         else:
             apod_message = "⚠️ Sorry, I couldn't fetch the Astronomy Picture of the Day right now."
 
-        await send_message_with_keyboard(update.callback_query.message, apod_message)
+        await send_message_with_keyboard(update.callback_query.message, apod_message, is_subscription_active=is_subscription_active)
     except Exception as e:
         logger.error(f"Error in APOD: {e}")
-        await send_message_with_keyboard(update.callback_query.message, "⚡ Oops, something went wrong while fetching the APOD!")
+        await send_message_with_keyboard(update.callback_query.message, "⚡ Oops, something went wrong while fetching the APOD!", is_subscription_active=is_subscription_active)
 
 async def ask_for_apod_date(update, context):
+    chat_id = update.effective_user.id
+    is_subscription_active = is_scheduler_running(chat_id)
     query = update.callback_query
     if not query or not query.message:
         logger.error("Missing callback_query or message")
@@ -49,11 +56,14 @@ async def ask_for_apod_date(update, context):
 
     await send_message_with_keyboard(
         query.message,
-        "📅 <b>Please enter a date</b> for APOD (in the format <code>YYYY-MM-DD</code>). Example: <code>1996-09-07</code> or <code>2020-01-01</code>."
+        "📅 <b>Please enter a date</b> for APOD (in the format <code>YYYY-MM-DD</code>). Example: <code>1996-09-07</code> or <code>2020-01-01</code>.",
+        is_subscription_active=is_subscription_active
     )
     context.user_data['waiting_for_date'] = True
 
 async def handle_user_apod_date(update, context):
+    chat_id = update.effective_user.id
+    is_subscription_active = is_scheduler_running(chat_id)
     if not context.user_data.get('waiting_for_date'):
         return
 
@@ -69,7 +79,7 @@ async def handle_user_apod_date(update, context):
 
         apod_data = await get_apod_by_date(selected_date.strftime('%Y-%m-%d'))
         if 'error' in apod_data:
-            await send_message_with_keyboard(message, f"⚠️ <b>Error:</b> {apod_data['error']}", parse_mode='HTML')
+            await send_message_with_keyboard(message, f"⚠️ <b>Error:</b> {apod_data['error']}", parse_mode='HTML', is_subscription_active=is_subscription_active)
             await loading_message_sent.delete()
             return
 
@@ -78,7 +88,8 @@ async def handle_user_apod_date(update, context):
             await send_message_with_keyboard(
                 message,
                 f"⚠️ <b>No images found</b> for <b>{selected_date}</b>. Try a different date.",
-                parse_mode='HTML'
+                parse_mode='HTML',
+                is_subscription_active=is_subscription_active
             )
             await loading_message_sent.delete()
             return
@@ -99,11 +110,11 @@ async def handle_user_apod_date(update, context):
             f"🌐 Explore more images and details on <a href='https://images.nasa.gov/'>NASA's platform</a>"
         )
 
-        await send_message_with_keyboard(message, msg, parse_mode='HTML')
+        await send_message_with_keyboard(message, msg, parse_mode='HTML', is_subscription_active=is_subscription_active)
         await loading_message_sent.delete()
 
     except ValueError:
-        await send_message_with_keyboard(message, "⚠️ <b>Invalid date format</b>. Please use <code>YYYY-MM-DD</code>. For example, <code>2020-12-15</code>.", parse_mode='HTML')
+        await send_message_with_keyboard(message, "⚠️ <b>Invalid date format</b>. Please use <code>YYYY-MM-DD</code>. For example, <code>2020-12-15</code>.", parse_mode='HTML', is_subscription_active=is_subscription_active)
     except Exception as e:
         logger.error(f"handle_user_apod_date error: {e}")
-        await send_message_with_keyboard(message, "⚠️ <b>Error processing your request</b>. Please try again later.", parse_mode='HTML')
+        await send_message_with_keyboard(message, "⚠️ <b>Error processing your request</b>. Please try again later.", parse_mode='HTML', is_subscription_active=is_subscription_active)

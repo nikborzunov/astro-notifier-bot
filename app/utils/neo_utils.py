@@ -2,6 +2,7 @@
 
 from datetime import datetime
 
+
 def get_approach_date(neo):
     try:
         return datetime.strptime(neo["close_approach_data"][0]["close_approach_date"], "%Y-%m-%d")
@@ -45,12 +46,12 @@ def build_neo_message(top_3_neo):
 
         message += (
             f"<b>🪐 {neo_name}</b> \n"
-            f"🌌 <b>Size</b>: {neo_diameter} m\n"
+            f"🔭 <b>Size</b>: {neo_diameter} m\n"
             f"⚡ <b>Speed</b>: {neo_velocity}\n"
             f"📅 <b>Closest Approach</b>: {neo_approach_date}\n"
             f"🌍 <b>Min Distance</b>: {neo_min_distance}\n"
             "\n<b>━━━━━━━━━━━━━━━━━━━━━</b>\n"
         )
 
-    message += "\nStay curious and safe! 🌌💫"
+    message += "\nStay curious and safe! 💫"
     return message
