@@ -11,7 +11,7 @@ from telegram.ext import (
 )
 
 from app.core.scheduler import is_scheduler_running
-from app.telegram_bot.handlers.callbacks.button_handler import button
+from app.telegram_bot.handlers.callbacks.buttons import button
 from app.telegram_bot.handlers.commands.apod import handle_user_apod_date
 from app.telegram_bot.handlers.commands.scheduler import (
     scheduler_start_command,
